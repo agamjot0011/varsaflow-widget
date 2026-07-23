@@ -1,3 +1,4 @@
+
 (function () {
   'use strict';
 
@@ -56,6 +57,17 @@
     '.vf-send-btn:disabled{opacity:.5;cursor:default;transform:none}',
     '.vf-footer{text-align:center;font-size:10.5px;color:var(--vf-text-mute);padding:6px 0 10px;background:#fff;flex-shrink:0}',
     '.vf-footer strong{color:#4a5a7a}',
+    '.vf-button-group{display:flex;flex-wrap:wrap;gap:8px;max-width:78%}',
+    '.vf-chat-button{padding:9px 14px;border-radius:999px;border:1px solid var(--vf-border);background:#fff;color:var(--vf-text);font-size:13px;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease}',
+    '.vf-chat-button:hover{background:var(--vf-blue);border-color:var(--vf-blue);color:#fff}',
+    '.vf-carousel{display:flex;overflow-x:auto;gap:12px;max-width:100%;padding-bottom:4px}',
+    '.vf-carousel::-webkit-scrollbar{height:5px}',
+    '.vf-carousel::-webkit-scrollbar-thumb{background:#cfd6e4;border-radius:3px}',
+    '.vf-card{min-width:150px;max-width:150px;background:#fff;border:1px solid var(--vf-border);border-radius:12px;padding:10px;flex-shrink:0}',
+    '.vf-card-image{width:100%;height:90px;object-fit:cover;border-radius:8px;background:var(--vf-bg-soft)}',
+    '.vf-card-title{font-size:13px;font-weight:600;color:var(--vf-text);margin-top:8px;line-height:1.3}',
+    '.vf-card-price{font-size:12.5px;color:var(--vf-text-mute);margin-top:2px}',
+    '.vf-card-btn{width:100%;margin-top:8px;padding:8px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--vf-blue) 0%,var(--vf-teal) 100%);color:#fff;font-size:12.5px;cursor:pointer}',
     '@media(max-width:480px){#varsaflow-chat-widget{bottom:14px;right:14px}.vf-window{width:calc(100vw - 24px);height:min(72vh,560px);bottom:70px;right:-6px}.vf-bubble-btn{width:54px;height:54px}}'
   ].join('');
   document.head.appendChild(style);
@@ -166,7 +178,7 @@
       .then(function (res) { return res.json(); })
       .then(function (data) {
         showTyping(false);
-        addMessage(data.reply || "Thanks for your message! We'll get back to you soon.", 'bot');
+        renderResponse(data);
       })
       .catch(function () {
         showTyping(false);
@@ -176,158 +188,112 @@
         sendBtn.disabled = false;
       });
   }
-})();
 
+  // ---- Component rendering (buttons / quick replies / carousel) ----
 
-/* ==========================================================
-   VARSAFLOW COMPONENT SUPPORT (Buttons, Quick Replies, Carousel)
-   Add these helper functions into your widget and replace the
-   fetch success handler with renderResponse(data).
-   ========================================================== */
-
-function renderResponse(data){
-  addMessage(data.reply || "", "bot");
-
-  if(!data.components || !Array.isArray(data.components)) return;
-
-  data.components.forEach(function(component){
-
-    switch(component.type){
-
-      case "buttons":
-        renderButtons(component.items || []);
-        break;
-
-      case "quick_replies":
-        renderQuickReplies(component.items || []);
-        break;
-
-      case "carousel":
-        renderCarousel(component.items || []);
-        break;
-
+  function renderResponse(data) {
+    if (data && data.reply) {
+      addMessage(data.reply, 'bot');
     }
 
-  });
-}
+    if (!data || !data.components || !Array.isArray(data.components)) return;
 
-function sendComponentValue(value,label){
-  addMessage(label || value,"user");
+    data.components.forEach(function (component) {
+      switch (component.type) {
+        case 'buttons':
+          renderButtons(component.items || []);
+          break;
+        case 'quick_replies':
+          renderQuickReplies(component.items || []);
+          break;
+        case 'carousel':
+          renderCarousel(component.items || []);
+          break;
+      }
+    });
+  }
 
-  showTyping(true);
+  function sendComponentValue(value, label) {
+    addMessage(label || value, 'user');
+    sendBtn.disabled = true;
+    showTyping(true);
 
-  fetch(WEBHOOK_URL+"?"+new URLSearchParams({
-      message:value,
-      timestamp:new Date().toISOString()
-  }))
-  .then(r=>r.json())
-  .then(function(data){
-      showTyping(false);
-      renderResponse(data);
-  })
-  .catch(function(){
-      showTyping(false);
-      addMessage("Something went wrong.","bot");
-  });
-}
+    var params = new URLSearchParams({
+      message: value,
+      timestamp: new Date().toISOString()
+    });
 
-function renderButtons(items){
+    fetch(WEBHOOK_URL + '?' + params.toString(), { method: 'GET' })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        showTyping(false);
+        renderResponse(data);
+      })
+      .catch(function () {
+        showTyping(false);
+        addMessage("Sorry, something went wrong. Please try again in a moment.", 'bot');
+      })
+      .finally(function () {
+        sendBtn.disabled = false;
+      });
+  }
 
-  var row=document.createElement("div");
-  row.className="vf-message vf-bot";
+  function renderButtons(items) {
+    var row = document.createElement('div');
+    row.className = 'vf-message vf-bot';
+    row.innerHTML = '<img src="https://i.ibb.co/1YH0F6F0/image-5.png" alt="" class="vf-avatar"><div class="vf-button-group"></div>';
 
-  row.innerHTML='<img src="https://i.ibb.co/1YH0F6F0/image-5.png" class="vf-avatar"><div class="vf-button-group"></div>';
+    var group = row.querySelector('.vf-button-group');
 
-  var group=row.querySelector(".vf-button-group");
-
-  items.forEach(function(item){
-
-      var b=document.createElement("button");
-
-      b.className="vf-chat-button";
-
-      b.innerText=item.text;
-
-      b.onclick=function(){
-
-          group.remove();
-
-          sendComponentValue(item.value,item.text);
-
+    items.forEach(function (item) {
+      var b = document.createElement('button');
+      b.className = 'vf-chat-button';
+      b.innerText = item.text;
+      b.onclick = function () {
+        row.remove();
+        sendComponentValue(item.value, item.text);
       };
-
       group.appendChild(b);
-
-  });
-
-  messages.appendChild(row);
-
-  scrollToBottom();
-
-}
-
-function renderQuickReplies(items){
-
-    renderButtons(items.map(function(i){
-        return {text:i,value:i};
-    }));
-
-}
-
-function renderCarousel(items){
-
-    var row=document.createElement("div");
-
-    row.className="vf-message vf-bot";
-
-    row.innerHTML='<img src="https://i.ibb.co/1YH0F6F0/image-5.png" class="vf-avatar"><div class="vf-carousel"></div>';
-
-    var wrap=row.querySelector(".vf-carousel");
-
-    items.forEach(function(card){
-
-        var el=document.createElement("div");
-
-        el.className="vf-card";
-
-        el.innerHTML=
-        '<img src="'+card.image+'" class="vf-card-image">'+
-        '<div class="vf-card-title">'+card.title+'</div>'+
-        '<div class="vf-card-price">'+card.price+'</div>'+
-        '<button class="vf-card-btn">'+card.button+'</button>';
-
-        el.querySelector("button").onclick=function(){
-
-            sendComponentValue(card.title,card.button);
-
-        };
-
-        wrap.appendChild(el);
-
     });
 
     messages.appendChild(row);
-
     scrollToBottom();
+  }
 
-}
+  function renderQuickReplies(items) {
+    renderButtons(items.map(function (i) {
+      return { text: i, value: i };
+    }));
+  }
 
-/* Replace:
+  function renderCarousel(items) {
+    var row = document.createElement('div');
+    row.className = 'vf-message vf-bot';
+    row.innerHTML = '<img src="https://i.ibb.co/1YH0F6F0/image-5.png" alt="" class="vf-avatar"><div class="vf-carousel"></div>';
 
-addMessage(data.reply || "...","bot");
+    var wrap = row.querySelector('.vf-carousel');
 
-with:
+    items.forEach(function (card) {
+      var el = document.createElement('div');
+      el.className = 'vf-card';
+      el.innerHTML =
+        '<img class="vf-card-image">' +
+        '<div class="vf-card-title"></div>' +
+        '<div class="vf-card-price"></div>' +
+        '<button class="vf-card-btn"></button>';
 
-renderResponse(data);
+      el.querySelector('.vf-card-image').src = card.image;
+      el.querySelector('.vf-card-title').textContent = card.title;
+      el.querySelector('.vf-card-price').textContent = card.price;
+      el.querySelector('.vf-card-btn').textContent = card.button;
+      el.querySelector('button').onclick = function () {
+        sendComponentValue(card.title, card.button);
+      };
 
-Also add CSS:
+      wrap.appendChild(el);
+    });
 
-.vf-button-group{display:flex;flex-wrap:wrap;gap:8px}
-.vf-chat-button{padding:10px 14px;border-radius:999px;border:1px solid #d9d9d9;background:#fff;cursor:pointer}
-.vf-chat-button:hover{background:#3d6ee0;color:#fff}
-.vf-carousel{display:flex;overflow-x:auto;gap:12px}
-.vf-card{min-width:180px;background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:10px}
-.vf-card-image{width:100%;height:120px;object-fit:cover;border-radius:8px}
-.vf-card-btn{width:100%;margin-top:8px}
-
-*/
+    messages.appendChild(row);
+    scrollToBottom();
+  }
+})();
