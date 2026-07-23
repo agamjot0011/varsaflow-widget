@@ -29,7 +29,7 @@
     '.vf-header-status i{width:6px;height:6px;border-radius:50%;background:#2ee6a6;display:inline-block;box-shadow:0 0 0 3px rgba(46,230,166,.18)}',
     '.vf-close-btn{background:none;border:none;color:#c3cbdb;cursor:pointer;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s ease,color .2s ease}',
     '.vf-close-btn:hover{background:rgba(255,255,255,.08);color:#fff}',
-    '.vf-messages{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px;background:var(--vf-bg-soft)}',
+    '.vf-messages{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 14px;display:flex;flex-direction:column;gap:12px;background:var(--vf-bg-soft)}',
     '.vf-messages::-webkit-scrollbar{width:5px}',
     '.vf-messages::-webkit-scrollbar-track{background:transparent}',
     '.vf-messages::-webkit-scrollbar-thumb{background:#cfd6e4;border-radius:3px}',
@@ -56,40 +56,34 @@
     '.vf-send-btn:disabled{opacity:.5;cursor:default;transform:none}',
     '.vf-footer{text-align:center;font-size:10.5px;color:var(--vf-text-mute);padding:6px 0 10px;background:#fff;flex-shrink:0}',
     '.vf-footer strong{color:#4a5a7a}',
-
-    /* ---- Component Styles ---- */
-
     /* Buttons */
     '.vf-buttons-row{display:flex;flex-wrap:wrap;gap:7px;padding:4px 0 2px 30px;animation:vf-fade-in .25s ease-out}',
     '.vf-btn{display:inline-flex;align-items:center;justify-content:center;padding:7px 14px;border-radius:20px;border:1.5px solid var(--vf-blue);background:#fff;color:var(--vf-blue);font-size:12.5px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .18s ease,color .18s ease,transform .15s ease,box-shadow .15s ease;white-space:nowrap;box-shadow:0 1px 4px rgba(61,110,224,.1)}',
     '.vf-btn:hover{background:var(--vf-blue);color:#fff;transform:translateY(-1px);box-shadow:0 4px 12px rgba(61,110,224,.25)}',
     '.vf-btn:active{transform:translateY(0);box-shadow:none}',
     '.vf-btn.used{opacity:.5;cursor:default;pointer-events:none}',
-
     /* Quick Replies */
     '.vf-quick-replies-row{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 2px 30px;animation:vf-fade-in .25s ease-out}',
     '.vf-qr{display:inline-flex;align-items:center;justify-content:center;padding:6px 13px;border-radius:16px;border:1.5px solid var(--vf-teal);background:#fff;color:#0d9e9e;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .18s ease,color .18s ease,transform .15s ease;white-space:nowrap}',
     '.vf-qr:hover{background:var(--vf-teal);color:#fff;transform:translateY(-1px)}',
     '.vf-qr:active{transform:translateY(0)}',
     '.vf-qr.used{opacity:.5;cursor:default;pointer-events:none}',
-
-    /* Carousel */
-    '.vf-carousel-wrapper{padding:4px 0 2px 30px;animation:vf-fade-in .25s ease-out;overflow:hidden}',
-    '.vf-carousel{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}',
-    '.vf-carousel::-webkit-scrollbar{height:4px}',
-    '.vf-carousel::-webkit-scrollbar-track{background:transparent}',
-    '.vf-carousel::-webkit-scrollbar-thumb{background:#cfd6e4;border-radius:2px}',
-    '.vf-carousel-card{flex:0 0 180px;background:#fff;border-radius:14px;border:1px solid var(--vf-border);overflow:hidden;scroll-snap-align:start;box-shadow:0 2px 10px rgba(13,21,38,.08);transition:transform .2s ease,box-shadow .2s ease}',
+    /* Carousel - FIXED: full-width, proper overflow */
+    '.vf-carousel-wrapper{width:100%;animation:vf-fade-in .25s ease-out;padding:4px 0 8px 0}',
+    '.vf-carousel-track{display:flex;gap:10px;overflow-x:auto;overflow-y:visible;padding:4px 14px 10px 14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#cfd6e4 transparent}',
+    '.vf-carousel-track::-webkit-scrollbar{height:4px}',
+    '.vf-carousel-track::-webkit-scrollbar-track{background:transparent}',
+    '.vf-carousel-track::-webkit-scrollbar-thumb{background:#cfd6e4;border-radius:2px}',
+    '.vf-carousel-card{flex:0 0 155px;min-width:155px;background:#fff;border-radius:14px;border:1px solid var(--vf-border);overflow:hidden;scroll-snap-align:start;box-shadow:0 2px 10px rgba(13,21,38,.08);transition:transform .2s ease,box-shadow .2s ease}',
     '.vf-carousel-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(13,21,38,.14)}',
-    '.vf-carousel-img{width:100%;height:110px;object-fit:cover;background:linear-gradient(135deg,#e8edf5 0%,#d0d8ea 100%);display:flex;align-items:center;justify-content:center;font-size:28px}',
-    '.vf-carousel-img img{width:100%;height:100%;object-fit:cover}',
-    '.vf-carousel-body{padding:10px 10px 12px}',
-    '.vf-carousel-title{font-size:12.5px;font-weight:600;color:var(--vf-text);margin:0 0 4px;line-height:1.3}',
-    '.vf-carousel-price{font-size:13px;font-weight:700;color:var(--vf-blue);margin:0 0 8px}',
-    '.vf-carousel-btn{width:100%;padding:7px 0;border-radius:10px;border:none;background:linear-gradient(135deg,var(--vf-blue) 0%,var(--vf-teal) 100%);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .18s ease,transform .15s ease}',
+    '.vf-carousel-img{width:100%;height:96px;background:linear-gradient(135deg,#e8edf5 0%,#d0d8ea 100%);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;flex-shrink:0}',
+    '.vf-carousel-img img{width:100%;height:100%;object-fit:cover;display:block}',
+    '.vf-carousel-body{padding:8px 10px 10px}',
+    '.vf-carousel-title{font-size:12px;font-weight:600;color:var(--vf-text);margin:0 0 3px;line-height:1.3}',
+    '.vf-carousel-price{font-size:13px;font-weight:700;color:var(--vf-blue);margin:0 0 7px}',
+    '.vf-carousel-btn{width:100%;padding:6px 0;border-radius:8px;border:none;background:linear-gradient(135deg,var(--vf-blue) 0%,var(--vf-teal) 100%);color:#fff;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .18s ease,transform .15s ease}',
     '.vf-carousel-btn:hover{opacity:.88;transform:translateY(-1px)}',
     '.vf-carousel-btn:active{transform:translateY(0)}',
-
     '@media(max-width:480px){#varsaflow-chat-widget{bottom:14px;right:14px}.vf-window{width:calc(100vw - 24px);height:min(72vh,560px);bottom:70px;right:-6px}.vf-bubble-btn{width:54px;height:54px}}'
   ].join('');
   document.head.appendChild(style);
@@ -117,7 +111,7 @@
     '  <div id="varsaflow-chat-messages" class="vf-messages">',
     '    <div class="vf-message vf-bot">',
     '      <img src="https://i.ibb.co/1YH0F6F0/image-5.png" alt="" class="vf-avatar">',
-    '      <div class="vf-bubble">Hi there \uD83D\uDC4B Welcome to Varsaflow. How can I help you today?</div>',
+    '      <div class="vf-bubble">Hi there 👋 Welcome to Varsaflow. How can I help you today?</div>',
     '    </div>',
     '  </div>',
     '  <div id="varsaflow-typing" class="vf-typing hidden">',
@@ -125,7 +119,7 @@
     '    <div class="vf-bubble vf-typing-bubble"><span></span><span></span><span></span></div>',
     '  </div>',
     '  <div class="vf-input-area">',
-    '    <input type="text" id="varsaflow-input" class="vf-input" placeholder="Type your message\u2026" autocomplete="off" maxlength="500">',
+    '    <input type="text" id="varsaflow-input" class="vf-input" placeholder="Type your message…" autocomplete="off" maxlength="500">',
     '    <button id="varsaflow-send-btn" class="vf-send-btn" aria-label="Send message">',
     '      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>',
     '    </button>',
@@ -136,12 +130,12 @@
   document.body.appendChild(container);
 
   // ---- Wire up events ----
-  var bubble      = document.getElementById('varsaflow-chat-bubble');
-  var win         = document.getElementById('varsaflow-chat-window');
-  var closeBtn    = document.getElementById('varsaflow-close-btn');
-  var input       = document.getElementById('varsaflow-input');
-  var sendBtn     = document.getElementById('varsaflow-send-btn');
-  var messages    = document.getElementById('varsaflow-chat-messages');
+  var bubble          = document.getElementById('varsaflow-chat-bubble');
+  var win             = document.getElementById('varsaflow-chat-window');
+  var closeBtn        = document.getElementById('varsaflow-close-btn');
+  var input           = document.getElementById('varsaflow-input');
+  var sendBtn         = document.getElementById('varsaflow-send-btn');
+  var messages        = document.getElementById('varsaflow-chat-messages');
   var typingIndicator = document.getElementById('varsaflow-typing');
 
   bubble.addEventListener('click', function () {
@@ -165,24 +159,17 @@
   function addMessage(text, sender) {
     var row = document.createElement('div');
     row.className = 'vf-message ' + (sender === 'user' ? 'vf-user' : 'vf-bot');
-    var bubbleHtml = '<div class="vf-bubble"></div>';
     if (sender === 'bot') {
-      row.innerHTML = '<img src="https://i.ibb.co/1YH0F6F0/image-5.png" alt="" class="vf-avatar">' + bubbleHtml;
+      row.innerHTML = '<img src="https://i.ibb.co/1YH0F6F0/image-5.png" alt="" class="vf-avatar"><div class="vf-bubble"></div>';
     } else {
-      row.innerHTML = bubbleHtml;
+      row.innerHTML = '<div class="vf-bubble"></div>';
     }
     row.querySelector('.vf-bubble').textContent = text;
     messages.appendChild(row);
     scrollToBottom();
   }
 
-  // ---- Component renderers ----
-
-  /**
-   * Render a row of action buttons.
-   * Each item: { text: string, value: string }
-   * Clicking a button sends its value as a user message and disables the row.
-   */
+  // ---- Buttons renderer ----
   function renderButtons(items) {
     var row = document.createElement('div');
     row.className = 'vf-buttons-row';
@@ -191,10 +178,7 @@
       btn.className = 'vf-btn';
       btn.textContent = item.text || item.value || '';
       btn.addEventListener('click', function () {
-        // Disable all buttons in this row
-        var siblings = row.querySelectorAll('.vf-btn');
-        siblings.forEach(function (b) { b.classList.add('used'); });
-        // Send the value as a user message
+        row.querySelectorAll('.vf-btn').forEach(function (b) { b.classList.add('used'); });
         var sendValue = item.value || item.text || '';
         addMessage(item.text || sendValue, 'user');
         dispatchMessage(sendValue);
@@ -205,23 +189,20 @@
     scrollToBottom();
   }
 
-  /**
-   * Render quick reply chips.
-   * Each item is a plain string.
-   * Clicking sends that string as a user message and disables the row.
-   */
+  // ---- Quick replies renderer ----
   function renderQuickReplies(items) {
     var row = document.createElement('div');
     row.className = 'vf-quick-replies-row';
     items.forEach(function (item) {
       var chip = document.createElement('button');
       chip.className = 'vf-qr';
-      chip.textContent = item;
+      // Support both string items and object items
+      var label = (typeof item === 'string') ? item : (item.text || item.label || item.value || String(item));
+      chip.textContent = label;
       chip.addEventListener('click', function () {
-        var siblings = row.querySelectorAll('.vf-qr');
-        siblings.forEach(function (c) { c.classList.add('used'); });
-        addMessage(item, 'user');
-        dispatchMessage(item);
+        row.querySelectorAll('.vf-qr').forEach(function (c) { c.classList.add('used'); });
+        addMessage(label, 'user');
+        dispatchMessage(label);
       });
       row.appendChild(chip);
     });
@@ -229,61 +210,88 @@
     scrollToBottom();
   }
 
-  /**
-   * Render a horizontally scrollable carousel.
-   * Each item: { title, image, price, button }
-   * Clicking the card button sends the title as a user message.
-   */
+  // ---- Carousel renderer (FIXED) ----
   function renderCarousel(items) {
+    // Wrapper sits directly in the messages flex column
     var wrapper = document.createElement('div');
     wrapper.className = 'vf-carousel-wrapper';
 
     var track = document.createElement('div');
-    track.className = 'vf-carousel';
+    track.className = 'vf-carousel-track';
 
     items.forEach(function (item) {
       var card = document.createElement('div');
       card.className = 'vf-carousel-card';
 
-      // Image area
+      // --- Image area ---
       var imgWrap = document.createElement('div');
       imgWrap.className = 'vf-carousel-img';
-      if (item.image && item.image !== '...') {
+
+      var hasRealImage = item.image && item.image !== '...' && item.image.trim() !== '';
+      if (hasRealImage) {
         var img = document.createElement('img');
         img.src = item.image;
         img.alt = item.title || '';
+        img.onerror = function () {
+          // Fallback to emoji if image fails to load
+          imgWrap.removeChild(img);
+          imgWrap.textContent = '\uD83D\uDDBC\uFE0F';
+        };
         imgWrap.appendChild(img);
       } else {
-        // Placeholder emoji when no real image
         imgWrap.textContent = '\uD83D\uDDBC\uFE0F';
       }
 
-      // Body
+      // --- Body ---
       var body = document.createElement('div');
       body.className = 'vf-carousel-body';
 
       if (item.title) {
-        var title = document.createElement('p');
-        title.className = 'vf-carousel-title';
-        title.textContent = item.title;
-        body.appendChild(title);
+        var titleEl = document.createElement('p');
+        titleEl.className = 'vf-carousel-title';
+        titleEl.textContent = item.title;
+        body.appendChild(titleEl);
+      }
+
+      if (item.subtitle) {
+        var subtitleEl = document.createElement('p');
+        subtitleEl.className = 'vf-carousel-title';
+        subtitleEl.style.fontWeight = '400';
+        subtitleEl.style.color = 'var(--vf-text-mute)';
+        subtitleEl.textContent = item.subtitle;
+        body.appendChild(subtitleEl);
       }
 
       if (item.price) {
-        var price = document.createElement('p');
-        price.className = 'vf-carousel-price';
-        price.textContent = item.price;
-        body.appendChild(price);
+        var priceEl = document.createElement('p');
+        priceEl.className = 'vf-carousel-price';
+        priceEl.textContent = item.price;
+        body.appendChild(priceEl);
       }
 
+      // Support both item.button (string label) and item.buttons (array)
+      var buttonLabel = null;
+      var buttonValue = null;
+
       if (item.button) {
+        buttonLabel = item.button;
+        buttonValue = item.button_value || item.url || item.title || item.button;
+      } else if (Array.isArray(item.buttons) && item.buttons.length > 0) {
+        buttonLabel = item.buttons[0].text || item.buttons[0].label || item.buttons[0].title || 'View';
+        buttonValue = item.buttons[0].value || item.buttons[0].url || buttonLabel;
+      }
+
+      if (buttonLabel) {
         var cardBtn = document.createElement('button');
         cardBtn.className = 'vf-carousel-btn';
-        cardBtn.textContent = item.button;
-        cardBtn.addEventListener('click', function () {
-          addMessage(item.button, 'user');
-          dispatchMessage(item.title || item.button);
-        });
+        cardBtn.textContent = buttonLabel;
+        // Capture values in closure
+        (function (lbl, val) {
+          cardBtn.addEventListener('click', function () {
+            addMessage(lbl, 'user');
+            dispatchMessage(val);
+          });
+        })(buttonLabel, buttonValue);
         body.appendChild(cardBtn);
       }
 
@@ -297,43 +305,80 @@
     scrollToBottom();
   }
 
-  // ---- Render full bot response (reply text + components) ----
-  function renderBotResponse(data) {
-    // 1. Render the text reply (if present)
-    var replyText = data.reply || data.message || data.text || null;
-    if (replyText) {
-      addMessage(replyText, 'bot');
+  // ---- Normalise a raw webhook payload into a standard object ----
+  function normalisePayload(raw) {
+    // Already a plain object with reply/components
+    if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+      // n8n sometimes wraps in { output: ... } or { json: ... }
+      if (raw.output) return normalisePayload(raw.output);
+      if (raw.json)   return normalisePayload(raw.json);
+      return raw;
     }
-
-    // 2. Render each component in order
-    var components = data.components;
-    if (Array.isArray(components)) {
-      components.forEach(function (component) {
-        switch (component.type) {
-          case 'buttons':
-            if (Array.isArray(component.items) && component.items.length) {
-              renderButtons(component.items);
-            }
-            break;
-          case 'quick_replies':
-            if (Array.isArray(component.items) && component.items.length) {
-              renderQuickReplies(component.items);
-            }
-            break;
-          case 'carousel':
-            if (Array.isArray(component.items) && component.items.length) {
-              renderCarousel(component.items);
-            }
-            break;
-          default:
-            // Unknown component type — silently skip
-            break;
-        }
-      });
+    // Array: take first element
+    if (Array.isArray(raw) && raw.length > 0) {
+      return normalisePayload(raw[0]);
     }
+    // String: try JSON parse
+    if (typeof raw === 'string') {
+      try { return normalisePayload(JSON.parse(raw)); } catch (e) {}
+      return { reply: raw };
+    }
+    return {};
   }
 
-  // ---- Dispatch a message to the webhook (used by component clicks) ----
+  // ---- Render full bot response (reply text + components) ----
+  function renderBotResponse(rawData) {
+    var data = normalisePayload(rawData);
+
+    // Render reply text
+    var replyText = data.reply || data.message || data.text || null;
+    if (replyText) {
+      addMessage(String(replyText), 'bot');
+    }
+
+    // Render components
+    var components = data.components;
+    if (!Array.isArray(components)) {
+      // Fallback: check top-level keys for component-like structures
+      if (Array.isArray(data.buttons))       renderButtons(data.buttons);
+      if (Array.isArray(data.quick_replies)) renderQuickReplies(data.quick_replies);
+      if (Array.isArray(data.carousel))      renderCarousel(data.carousel);
+      return;
+    }
+
+    components.forEach(function (component) {
+      if (!component || !component.type) return;
+      var type = String(component.type).toLowerCase().trim();
+
+      switch (type) {
+        case 'buttons':
+          if (Array.isArray(component.items) && component.items.length) {
+            renderButtons(component.items);
+          }
+          break;
+
+        case 'quick_replies':
+        case 'quick-replies':
+        case 'quickreplies':
+          if (Array.isArray(component.items) && component.items.length) {
+            renderQuickReplies(component.items);
+          }
+          break;
+
+        case 'carousel':
+          if (Array.isArray(component.items) && component.items.length) {
+            renderCarousel(component.items);
+          }
+          break;
+
+        default:
+          // Unknown component type — silently ignore
+          break;
+      }
+    });
+  }
+
+  // ---- Dispatch message to webhook ----
   function dispatchMessage(text) {
     sendBtn.disabled = true;
     showTyping(true);
@@ -347,8 +392,9 @@
         showTyping(false);
         renderBotResponse(data);
       })
-      .catch(function () {
+      .catch(function (err) {
         showTyping(false);
+        console.error('[Varsaflow] Webhook error:', err);
         addMessage('Sorry, something went wrong. Please try again in a moment.', 'bot');
       })
       .finally(function () {
