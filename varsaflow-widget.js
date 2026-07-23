@@ -1,4 +1,3 @@
-
 (function () {
   'use strict';
 
@@ -175,12 +174,15 @@
       timestamp: new Date().toISOString()
     });
     fetch(WEBHOOK_URL + '?' + params.toString(), { method: 'GET' })
-      .then(function (res) { return res.json(); })
-      .then(function (data) {
+      .then(function (res) { return res.text(); })
+      .then(function (raw) {
+        console.log('[Varsaflow] raw response:', raw);
+        var data = JSON.parse(raw);
         showTyping(false);
         renderResponse(data);
       })
-      .catch(function () {
+      .catch(function (err) {
+        console.error('[Varsaflow] sendMessage failed:', err);
         showTyping(false);
         addMessage("Sorry, something went wrong. Please try again in a moment.", 'bot');
       })
@@ -196,19 +198,28 @@
       addMessage(data.reply, 'bot');
     }
 
-    if (!data || !data.components || !Array.isArray(data.components)) return;
+    if (!data || !data.components || !Array.isArray(data.components)) {
+      console.log('[Varsaflow] no components array on response:', data);
+      return;
+    }
 
     data.components.forEach(function (component) {
-      switch (component.type) {
-        case 'buttons':
-          renderButtons(component.items || []);
-          break;
-        case 'quick_replies':
-          renderQuickReplies(component.items || []);
-          break;
-        case 'carousel':
-          renderCarousel(component.items || []);
-          break;
+      try {
+        switch (component.type) {
+          case 'buttons':
+            renderButtons(component.items || []);
+            break;
+          case 'quick_replies':
+            renderQuickReplies(component.items || []);
+            break;
+          case 'carousel':
+            renderCarousel(component.items || []);
+            break;
+          default:
+            console.warn('[Varsaflow] unrecognized component type:', component.type, component);
+        }
+      } catch (err) {
+        console.error('[Varsaflow] failed to render component:', component, err);
       }
     });
   }
@@ -224,12 +235,15 @@
     });
 
     fetch(WEBHOOK_URL + '?' + params.toString(), { method: 'GET' })
-      .then(function (res) { return res.json(); })
-      .then(function (data) {
+      .then(function (res) { return res.text(); })
+      .then(function (raw) {
+        console.log('[Varsaflow] raw response:', raw);
+        var data = JSON.parse(raw);
         showTyping(false);
         renderResponse(data);
       })
-      .catch(function () {
+      .catch(function (err) {
+        console.error('[Varsaflow] sendComponentValue failed:', err);
         showTyping(false);
         addMessage("Sorry, something went wrong. Please try again in a moment.", 'bot');
       })
