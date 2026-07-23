@@ -177,3 +177,157 @@
       });
   }
 })();
+
+
+/* ==========================================================
+   VARSAFLOW COMPONENT SUPPORT (Buttons, Quick Replies, Carousel)
+   Add these helper functions into your widget and replace the
+   fetch success handler with renderResponse(data).
+   ========================================================== */
+
+function renderResponse(data){
+  addMessage(data.reply || "", "bot");
+
+  if(!data.components || !Array.isArray(data.components)) return;
+
+  data.components.forEach(function(component){
+
+    switch(component.type){
+
+      case "buttons":
+        renderButtons(component.items || []);
+        break;
+
+      case "quick_replies":
+        renderQuickReplies(component.items || []);
+        break;
+
+      case "carousel":
+        renderCarousel(component.items || []);
+        break;
+
+    }
+
+  });
+}
+
+function sendComponentValue(value,label){
+  addMessage(label || value,"user");
+
+  showTyping(true);
+
+  fetch(WEBHOOK_URL+"?"+new URLSearchParams({
+      message:value,
+      timestamp:new Date().toISOString()
+  }))
+  .then(r=>r.json())
+  .then(function(data){
+      showTyping(false);
+      renderResponse(data);
+  })
+  .catch(function(){
+      showTyping(false);
+      addMessage("Something went wrong.","bot");
+  });
+}
+
+function renderButtons(items){
+
+  var row=document.createElement("div");
+  row.className="vf-message vf-bot";
+
+  row.innerHTML='<img src="https://i.ibb.co/1YH0F6F0/image-5.png" class="vf-avatar"><div class="vf-button-group"></div>';
+
+  var group=row.querySelector(".vf-button-group");
+
+  items.forEach(function(item){
+
+      var b=document.createElement("button");
+
+      b.className="vf-chat-button";
+
+      b.innerText=item.text;
+
+      b.onclick=function(){
+
+          group.remove();
+
+          sendComponentValue(item.value,item.text);
+
+      };
+
+      group.appendChild(b);
+
+  });
+
+  messages.appendChild(row);
+
+  scrollToBottom();
+
+}
+
+function renderQuickReplies(items){
+
+    renderButtons(items.map(function(i){
+        return {text:i,value:i};
+    }));
+
+}
+
+function renderCarousel(items){
+
+    var row=document.createElement("div");
+
+    row.className="vf-message vf-bot";
+
+    row.innerHTML='<img src="https://i.ibb.co/1YH0F6F0/image-5.png" class="vf-avatar"><div class="vf-carousel"></div>';
+
+    var wrap=row.querySelector(".vf-carousel");
+
+    items.forEach(function(card){
+
+        var el=document.createElement("div");
+
+        el.className="vf-card";
+
+        el.innerHTML=
+        '<img src="'+card.image+'" class="vf-card-image">'+
+        '<div class="vf-card-title">'+card.title+'</div>'+
+        '<div class="vf-card-price">'+card.price+'</div>'+
+        '<button class="vf-card-btn">'+card.button+'</button>';
+
+        el.querySelector("button").onclick=function(){
+
+            sendComponentValue(card.title,card.button);
+
+        };
+
+        wrap.appendChild(el);
+
+    });
+
+    messages.appendChild(row);
+
+    scrollToBottom();
+
+}
+
+/* Replace:
+
+addMessage(data.reply || "...","bot");
+
+with:
+
+renderResponse(data);
+
+Also add CSS:
+
+.vf-button-group{display:flex;flex-wrap:wrap;gap:8px}
+.vf-chat-button{padding:10px 14px;border-radius:999px;border:1px solid #d9d9d9;background:#fff;cursor:pointer}
+.vf-chat-button:hover{background:#3d6ee0;color:#fff}
+.vf-carousel{display:flex;overflow-x:auto;gap:12px}
+.vf-card{min-width:180px;background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:10px}
+.vf-card-image{width:100%;height:120px;object-fit:cover;border-radius:8px}
+.vf-card-btn{width:100%;margin-top:8px}
+
+*/
